@@ -1,12 +1,13 @@
 use std::fs;
-use std::env::args;
+use std::path::Path;
+use std::env::args_os;
 
 fn main() {
     // Get the path to the file from arguments
-    let args: Vec<String> = args().collect();
-    let mut path: String = args[1].to_owned();
+    let args: Vec<_> = args_os().collect();
+    let path = Path::new(&args[1]);
 
-    println!("Path to file: {}", &path);
+    println!("Path to file: {}", path.display());
 
     // Read the file
     let mut buf = fs::read(&path).expect("Error reading the file!");
@@ -17,10 +18,10 @@ fn main() {
     (&mut png[..16]).copy_from_slice(png_head);
 
     // Write the new file
-    let end_filename = &mut path;
-    end_filename.push_str(".png");
+    let mut end_filename = path.to_owned();
+    end_filename.set_extension("png");
     fs::write(&end_filename, png).expect("Error writing the file!");
 
     // println!("{:?}", &buf);
-    println!("Exported to {}", end_filename);
+    println!("Exported to {}", end_filename.display());
 }
