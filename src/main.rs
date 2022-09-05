@@ -3,10 +3,15 @@ use std::path::Path;
 use std::env::args_os;
 
 fn main() {
-    // Get the path to the file from arguments
-    let args: Vec<_> = args_os().collect();
-    let path = Path::new(&args[1]);
+    // Convert all inputs
+    for arg in args_os().skip(1) {
+        let path = Path::new(&arg);
+        convert_rpgmvp(path);
+    }
+}
 
+/// Converts a.rpgmvp to a.png.
+fn convert_rpgmvp(path: &Path) {
     println!("Path to file: {}", path.display());
 
     // Read the file
