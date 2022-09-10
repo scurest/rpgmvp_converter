@@ -6,7 +6,28 @@ fn main() {
     // Convert all inputs
     for arg in args_os().skip(1) {
         let path = Path::new(&arg);
-        convert_rpgmvp(path);
+        if path.is_dir() {
+            convert_folder(path);
+        } else {
+            convert_rpgmvp(path);
+        }
+    }
+}
+
+/// Converts all .rpgmvp files in a folder.
+fn convert_folder(path: &Path) {
+    println!("Converting folder: {}", path.display());
+
+    let entries = fs::read_dir(path).expect("Error reading folder!");
+
+    for entry in entries {
+        let entry = entry.expect("Error reading dir entry!");
+        let path = entry.path();
+        if let Some(ext) = path.extension() {
+            if ext == "rpgmvp" || ext == "RPGMVP" {
+                convert_rpgmvp(&path);
+            }
+        }
     }
 }
 
